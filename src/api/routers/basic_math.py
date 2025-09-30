@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Query, HTTPException
-from typing import Annotated, List, Union
+from fastapi import APIRouter, HTTPException
+from typing import List
 import numpy as np
 
 basic_math_router = APIRouter(
@@ -11,78 +11,64 @@ basic_math_router = APIRouter(
 
 @basic_math_router.get("/addition")
 async def addition(
-    q: Annotated[
-        List[Union[int, float]],
-        Query(alias="numerical-array", title="List of numerical values"),
-    ],
+    q: List[int | float],
 ):
-    """This Python function calculates the sum of a list of numerical values provided as a query parameter.
+    """Calculate the sum of a list of numbers.
+
+    This endpoint takes a query parameter `q` which is a list of numbers
+    and returns their sum.
 
     Parameters
     ----------
-    q : Annotated[
-            List[Union[int, float]],
-            Query(alias="numerical-array", title="List of numerical values"),
-        ]
-        The parameter `q` is a list of numerical values that are passed as a query parameter to the
-    endpoint `/addition`. The values in the list can be integers or floats. The endpoint calculates the
-    sum of all the numerical values in the list using NumPy's `np.sum` function.
+    q : List[int | float]
+        A list of numbers (integers or floats) to be added together.
 
     Returns
     -------
-        The code defines a route for performing addition operation on a list of numerical values provided
-    as a query parameter. The function takes a list of numerical values as input, converts it to a NumPy
-    array, calculates the sum of the array elements, and returns the result.
+    float
+        The sum of all the numbers in the input list.
 
+    Raises
+    ------
+    HTTPException
+        If any error occurs during the summation process.
     """
     try:
-        array = np.array(q)
-        return np.sum(array)
+        return np.sum(q)
     except Exception as E:
         raise HTTPException(status_code=400, detail=f"{E}")
 
 
 @basic_math_router.get("/subtraction")
 async def subtraction(
-    q1: Annotated[
-        List[Union[int, float]],
-        Query(alias="numerical-array-1", title="List of numerical values 1."),
-    ],
-    q2: Annotated[
-        List[Union[int, float]],
-        Query(alias="numerical-array-2", title="List of numerical values 2"),
-    ],
+    q1: List[int | float],
+    q2: List[int | float],
 ):
-    """This Python function performs subtraction on two arrays of numerical values provided as input.
+    """Perform element-wise subtraction of two lists of numbers.
+
+    This endpoint takes two query parameters, `q1` and `q2`, which are two lists
+    of numbers. It performs element-wise subtraction (q1 - q2).
 
     Parameters
     ----------
-    q1 : Annotated[
-            List[Union[int, float]],
-            Query(alias="numerical-array-1", title="List of numerical values 1."),
-        ]
-        The parameter `q2` in the code snippet represents a list of numerical values 1. It is defined as a
-    query parameter with an alias of "numerical-array-1" and a title of "List of numerical values 1".
-    This parameter is expected to be a list containing elements that are either floats or ints.
-    q2 : Annotated[
-            List[Union[int, float]],
-            Query(alias="numerical-array-2", title="List of numerical values 2"),
-        ]
-        The parameter `q2` in the code snippet represents a list of numerical values 2. It is defined as a
-    query parameter with an alias of "numerical-array-2" and a title of "List of numerical values 2".
-    This parameter is expected to be a list containing elements that are either floats or ints.
+    q1 : List[int | float]
+        A list of numbers from which to subtract.
+    q2 : List[int | float]
+        A list of numbers to subtract.
 
     Returns
     -------
-        The code snippet defines an endpoint for subtraction operation where it takes two lists of
-    numerical values as input and returns the result of subtracting the elements of the second list from
-    the elements of the first list. The result returned is the element-wise subtraction of the two input
-    arrays.
+    npt.NDArray[np.number]
+        An array of numbers representing the result of the subtraction.
+        This is serialized to a JSON list.
 
+    Raises
+    ------
+    HTTPException
+        If any error occurs during the subtraction, for example, if the
+        lists have different lengths.
     """
     try:
-        array1 = np.array(q1)
-        array2 = np.array(q2)
-        return np.subtract(array1, array2)
+        return np.subtract(q1, q2)
     except Exception as E:
         raise HTTPException(status_code=400, detail=f"{E}")
