@@ -1,4 +1,4 @@
-from api.main import router_app
+from src.api.main import router_app
 from fastapi import FastAPI
 from fastapi_mcp import FastApiMCP
 
@@ -10,4 +10,5 @@ mcp = FastApiMCP(
     "Math MCP Server",
     "An MCP server that allows LLM's to use math formulas and operations!",
 )
+
 mcp.mount()
