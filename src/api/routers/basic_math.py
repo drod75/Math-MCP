@@ -1,7 +1,6 @@
-from fastapi import APIRouter, Query, HTTPException
+from fastapi import APIRouter, HTTPException
 from typing import List
 import numpy as np
-import numpy.typing as npt
 
 basic_math_router = APIRouter(
     prefix="/basic_math",
